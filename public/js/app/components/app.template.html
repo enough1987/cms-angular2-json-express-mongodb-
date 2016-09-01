@@ -1,0 +1,85 @@
+
+<div class="logik-block" >
+<div>
+<label> Create page </label>  
+<input type="text" placeholder="name"
+    [(ngModel)]="create_page.name" />
+<input type="button" value="Create page" 
+    (click)="create_page_func()"/>
+</div>
+<p *ngIf="create_page.response" > 
+  {{ create_page.response }} </p>
+</div>
+
+
+
+<div class="logik-block" >
+<ul>
+    <li *ngFor=" let item of pages | objectToArray " >
+        <label (click)="show_single_page(item)" >{{ item.name }}</label>
+        <input type="text" placeholder="new name" 
+            [(ngModel)]="change_page_name[item._id]" /> 
+        <input type="button" value="change" 
+            (click)="change_page_name_func(item)" />
+        <input type="button" value="delete" 
+            (click)="delete_page_func(item._id)" />
+    </li>
+</ul>
+</div>
+
+<div class="logik-block" *ngIf="single_page" >
+     <h2> Name of page : {{ single_page.name }} </h2>
+     <p>
+         <input type="text" placeholder="name" 
+            [(ngModel)]="new_field.name"
+         />
+         <select
+            [(ngModel)]="new_field.type"
+            (change)="change_new_field_type()"
+         >
+            <option selected value="string">string</option>
+            <option value="number">number</option>
+            <option value="boolean">boolean</option>
+            <option value="object">object</option>
+            <option value="array">array</option>
+        </select>
+
+        <input type="text" placeholder="value" 
+            *ngIf=" new_field.type === 'string' "
+            [(ngModel)]="new_field.value" />
+
+        <input type="number" placeholder="value" 
+            *ngIf=" new_field.type === 'number' "
+            [(ngModel)]="new_field.value" />
+
+        <select
+            *ngIf=" new_field.type === 'boolean' "
+            [(ngModel)]="new_field.value" 
+         >
+            <option value="1">true</option>
+            <option selected value="0">false</option>
+
+        </select>
+            
+        <input type="button" value="Create new field"
+            *ngIf="new_field.type" 
+            (click)="add_new_field()" />
+     </p>
+     <h3>All fields : </h3>
+     <ul>
+        <li *ngFor=" let item of single_page.body | objectToArray " >
+        <label> Name : <input type="text" value="{{ item.name }}" /> </label>
+        <label> Type : {{ item.type }} </label>
+        <label *ngIf=" item.type == 'string' || item.type == 'number' " > Value : 
+            <input type="text" value="{{ item.value }}" /> </label>
+        <input type="button" value="change" 
+            (click)="change_field_func(item)"     />
+        <input type="button" value="delete" 
+            (click)="delete_field_func(item)"     />
+        </li>
+    </ul>     
+
+</div>
+
+
+
