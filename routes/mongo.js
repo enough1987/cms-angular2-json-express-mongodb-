@@ -9,8 +9,10 @@ mongoose.connect('localhost:27017/pages');
 
 
 var schema = new Schema({
-  name: String,
-  body: Array
+  name : String,
+  group : String,
+  mutability : String,
+  body : Array
  });
 var model = mongoose.model('pages', schema);
 

@@ -1,5 +1,5 @@
 # Angular 2 + NodeJS
-This repository holds the code for my Angular 2 + NodeJS video(s) on YouTube
+CMS was created with Angular 2 + json + NodeJS + mongodb 
 
 # Usage
 

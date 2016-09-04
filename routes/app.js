@@ -7,21 +7,23 @@ var db = require(__dirname + '/mongo.js').model;
 // remove all
 //db.find().remove().exec();
 
-router.get('/api/pages', function(req, res, next){
+router.get('/api/components', function(req, res, next){
     var data = db.find();
     data.then(function(doc){   
-      console.log( ' find pages ' );
-      res.json({error: false, pages: doc});
+      console.log( ' find components ' );
+      res.json({error: false, components: doc});
     });
 });
 
-router.post('/api/pages', function(req, res, next){
+router.post('/api/components', function(req, res, next){
       if ( !req.body.name || !req.body.body) {
         res.json({error: true, msg: 'no name or body was provided'});
         return ;
       }
       var post = new db({
         name : req.body.name,
+        group : req.body.group,
+        mutability : req.body.mutability,
         body : req.body.body
       });
       post.save(function (err, result) {
@@ -33,19 +35,21 @@ router.post('/api/pages', function(req, res, next){
         data.then(function(doc){  
           res.json({
             error : false,
-            pages : doc
+            components : doc
           }); 
         });
       });
 });
 
-router.put('/api/pages', function(req, res, next){
+router.put('/api/components', function(req, res, next){
       if ( !req.body.id || !req.body.name || !req.body.body) {
         res.json({error: true, msg: 'no name or body or id was provided'});
         return ;
       }
       db.findOneAndUpdate({_id:req.body.id}, {
         name : req.body.name,
+        group :  req.body.group,
+        mutability : req.body.mutability,
         body : req.body.body
       }, function (err, result) {
           if( err ) {
@@ -56,7 +60,7 @@ router.put('/api/pages', function(req, res, next){
             data.then(function(doc){  
               res.json({
                 error : false,
-                pages : doc
+                components : doc
               });
             });
           }
@@ -64,7 +68,7 @@ router.put('/api/pages', function(req, res, next){
 });
 
 
-router.delete('/api/pages', function(req, res, next){
+router.delete('/api/components', function(req, res, next){
   var parts = url.parse(req.url, true);
   var id = parts.query.id;
   console.log( parts );
@@ -81,7 +85,7 @@ router.delete('/api/pages', function(req, res, next){
             data.then(function(doc){  
               res.json({
                 error : false,
-                pages : doc
+                components : doc
               });
             });
           }

@@ -1,36 +1,103 @@
 
 <div class="logik-block" >
-<div>
-<label> Create page </label>  
-<input type="text" placeholder="name"
-    [(ngModel)]="create_page.name" />
-<input type="button" value="Create page" 
-    (click)="create_page_func()"/>
-</div>
-<p *ngIf="create_page.response" > 
-  {{ create_page.response }} </p>
-</div>
 
 
+        <p>
+            <label class="admin-header"> Type of component </label> <br />
+            <label>
+            Mutable :  
+                <input type="radio" 
+                    value="mutable" 
+                    name="mutability"
+                    (click)="set_new_component_mutability('mutable')"
+                />
+            </label>
+            <label>
+            Immutable :    
+                <input type="radio" 
+                    value="immutable"
+                    name="mutability"
+                    (click)="set_new_component_mutability('immutable')"
+                />
+            </label>
+        </p>
+
+
+<!--
+        <input type="text" placeholder="name"
+    [(ngModel)]="create_component.name" />
+        <input type="text" placeholder="group"
+    [(ngModel)]="create_component.group" />
+        <input type="button" value="Create"
+    [disabled]="disabled_if_false(create_component.name)"
+    (click)="create_component_func()"/>
+    </div>
+    <p *ngIf="create_component.response" >
+  {{ create_component.response }} </p>
+-->
+</div>
+
+<div class="logik-block" 
+    *ngIf=" new_component.mutability == 'mutable' " >
+
+    <div>
+        <input type="text" placeholder="name" 
+            [(ngModel)]="new_component.name" 
+        />
+         <input type="button" value="add new component" 
+            (click)="create_component()"    
+        />
+    </div>
+<!--
+    <p  class="margin10"
+        *ngIf="!components.length" > 
+        No components yet 
+    </p>
+-->   
+    <div 
+    *ngFor=" let component of components " > 
+        <div 
+            *ngIf="component.mutability == 'mutable' " >
+            <label> {{ component.name }}</label>
+            <br />
+            <input type="text" placeholder="new name"
+                [(ngModel)]="component.new_name" />  
+            <input type="button" value="change"
+                (click)="change_component(component)" />
+            <br />
+            <input type="button" value="copy"
+                (click)="copy_component(component)" />
+            <input type="button" value="delete"
+                (click)="delete_component(component._id)" />        
+        </div>
+    </div>
+
+</div>
+
+<!--
 
 <div class="logik-block" >
 <ul>
-    <li *ngFor=" let item of pages | objectToArray " >
-        <label (click)="show_single_page(item)" >{{ item.name }}</label>
-        <input type="text" placeholder="new name" 
-            [(ngModel)]="change_page_name[item._id]" /> 
-        <input type="button" value="change" 
-            (click)="change_page_name_func(item)" />
-        <input type="button" value="delete" 
-            (click)="delete_page_func(item._id)" />
+    <li *ngFor=" let item of components | objectToArray " >
+        <label (click)="show_single_component(item)" >{{ item.name }}</label>
+        <input type="text" placeholder="new name"
+            [(ngModel)]="item.new_name" />
+        <input type="text" placeholder="new group"
+            [(ngModel)]="item.group" />
+        <input type="button" value="change"
+            (click)="change_component(item)" />
+        <input type="button" value="copy"
+            (click)="copy_component(item)" />
+        <input type="button" value="delete"
+            (click)="delete_component(item._id)" />
     </li>
 </ul>
 </div>
 
-<div class="logik-block" *ngIf="single_page" >
-     <h2> Name of page : {{ single_page.name }} </h2>
+<div class="logik-block" *ngIf="single_component" >
+     <h2> Name of component : {{ single_component.name }} </h2>
      <p>
-         <input type="text" placeholder="name" 
+         <input type="text" placeholder="name"
             [(ngModel)]="new_field.name"
          />
          <select
@@ -40,46 +107,58 @@
             <option selected value="string">string</option>
             <option value="number">number</option>
             <option value="boolean">boolean</option>
-            <option value="object">object</option>
-            <option value="array">array</option>
         </select>
 
-        <input type="text" placeholder="value" 
+        <input type="text" placeholder="value"
             *ngIf=" new_field.type === 'string' "
             [(ngModel)]="new_field.value" />
 
-        <input type="number" placeholder="value" 
+        <input type="number" placeholder="value"
             *ngIf=" new_field.type === 'number' "
             [(ngModel)]="new_field.value" />
 
         <select
             *ngIf=" new_field.type === 'boolean' "
-            [(ngModel)]="new_field.value" 
+            [(ngModel)]="new_field.value"
          >
             <option value="1">true</option>
             <option selected value="0">false</option>
 
         </select>
-            
+
         <input type="button" value="Create new field"
-            *ngIf="new_field.type" 
+            [disabled]="disabled_if_false(new_field.type)"
             (click)="add_new_field()" />
      </p>
-     <h3>All fields : </h3>
+     <h3 *ngIf=" single_component.body.length " >All fields : </h3>
+
+     <div *ngIf=" !single_component.body.length " > This component has 0 fields </div>
      <ul>
-        <li *ngFor=" let item of single_page.body | objectToArray " >
-        <label> Name : <input type="text" value="{{ item.name }}" /> </label>
+        <li *ngFor=" let item of single_component.body | objectToArray " >
+        <label> Name : <input type="text" 
+                [(ngModel)]="item.name" />
+        </label>
         <label> Type : {{ item.type }} </label>
-        <label *ngIf=" item.type == 'string' || item.type == 'number' " > Value : 
-            <input type="text" value="{{ item.value }}" /> </label>
-        <input type="button" value="change" 
+
+        <label *ngIf=" item.type == 'string' || item.type == 'number' " > Value :
+            <input type="text" 
+                [(ngModel)]="item.value" /> </label>
+
+        <label *ngIf=" item.type == 'boolean' " > Value :
+            <input type="checkbox" 
+                [(ngModel)]="item.value" /> </label>
+    
+        <input type="button" value="change"
             (click)="change_field_func(item)"     />
-        <input type="button" value="delete" 
+  
+        <input type="button" value="copy"
+            (click)="copy_field_func(item)"     />
+
+        <input type="button" value="delete"
             (click)="delete_field_func(item)"     />
+
         </li>
-    </ul>     
+    </ul>
 
 </div>
-
-
-
+-->
