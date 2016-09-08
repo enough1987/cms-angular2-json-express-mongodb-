@@ -23,18 +23,6 @@
         </p>
 
 
-<!--
-        <input type="text" placeholder="name"
-    [(ngModel)]="create_component.name" />
-        <input type="text" placeholder="group"
-    [(ngModel)]="create_component.group" />
-        <input type="button" value="Create"
-    [disabled]="disabled_if_false(create_component.name)"
-    (click)="create_component_func()"/>
-    </div>
-    <p *ngIf="create_component.response" >
-  {{ create_component.response }} </p>
--->
 </div>
 
 <div class="logik-block" 
@@ -48,14 +36,10 @@
             (click)="create_component()"    
         />
     </div>
-<!--
-    <p  class="margin10"
-        *ngIf="!components.length" > 
-        No components yet 
-    </p>
--->   
+ 
     <div 
     *ngFor=" let component of components " > 
+
         <div 
             *ngIf="component.mutability == 'mutable' " >
             <label> {{ component.name }}</label>
@@ -68,97 +52,23 @@
             <input type="button" value="copy"
                 (click)="copy_component(component)" />
             <input type="button" value="delete"
-                (click)="delete_component(component._id)" />        
+                (click)="delete_component(component._id)" />  
+            <input type="button" value="edit fields"
+                (click)="edit_fields_component(component)" />        
         </div>
+ 
+        <div *ngIf="show_fields_component(component)">
+                ------------- tt -------------
+                <input class="m-left-field" type="text" placeholder="name" />
+                <input class="m-left-field" type="text" placeholder="type" />
+                <input type="buttom" placeholder="add" />                
+
+                <div class="m-left-field"
+                    *ngFor=" let field of field_editable.body " >
+
+                </div>
+        </div>
+
     </div>
 
 </div>
-
-<!--
-
-<div class="logik-block" >
-<ul>
-    <li *ngFor=" let item of components | objectToArray " >
-        <label (click)="show_single_component(item)" >{{ item.name }}</label>
-        <input type="text" placeholder="new name"
-            [(ngModel)]="item.new_name" />
-        <input type="text" placeholder="new group"
-            [(ngModel)]="item.group" />
-        <input type="button" value="change"
-            (click)="change_component(item)" />
-        <input type="button" value="copy"
-            (click)="copy_component(item)" />
-        <input type="button" value="delete"
-            (click)="delete_component(item._id)" />
-    </li>
-</ul>
-</div>
-
-<div class="logik-block" *ngIf="single_component" >
-     <h2> Name of component : {{ single_component.name }} </h2>
-     <p>
-         <input type="text" placeholder="name"
-            [(ngModel)]="new_field.name"
-         />
-         <select
-            [(ngModel)]="new_field.type"
-            (change)="change_new_field_type()"
-         >
-            <option selected value="string">string</option>
-            <option value="number">number</option>
-            <option value="boolean">boolean</option>
-        </select>
-
-        <input type="text" placeholder="value"
-            *ngIf=" new_field.type === 'string' "
-            [(ngModel)]="new_field.value" />
-
-        <input type="number" placeholder="value"
-            *ngIf=" new_field.type === 'number' "
-            [(ngModel)]="new_field.value" />
-
-        <select
-            *ngIf=" new_field.type === 'boolean' "
-            [(ngModel)]="new_field.value"
-         >
-            <option value="1">true</option>
-            <option selected value="0">false</option>
-
-        </select>
-
-        <input type="button" value="Create new field"
-            [disabled]="disabled_if_false(new_field.type)"
-            (click)="add_new_field()" />
-     </p>
-     <h3 *ngIf=" single_component.body.length " >All fields : </h3>
-
-     <div *ngIf=" !single_component.body.length " > This component has 0 fields </div>
-     <ul>
-        <li *ngFor=" let item of single_component.body | objectToArray " >
-        <label> Name : <input type="text" 
-                [(ngModel)]="item.name" />
-        </label>
-        <label> Type : {{ item.type }} </label>
-
-        <label *ngIf=" item.type == 'string' || item.type == 'number' " > Value :
-            <input type="text" 
-                [(ngModel)]="item.value" /> </label>
-
-        <label *ngIf=" item.type == 'boolean' " > Value :
-            <input type="checkbox" 
-                [(ngModel)]="item.value" /> </label>
-    
-        <input type="button" value="change"
-            (click)="change_field_func(item)"     />
-  
-        <input type="button" value="copy"
-            (click)="copy_field_func(item)"     />
-
-        <input type="button" value="delete"
-            (click)="delete_field_func(item)"     />
-
-        </li>
-    </ul>
-
-</div>
--->
